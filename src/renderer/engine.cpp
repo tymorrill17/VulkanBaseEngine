@@ -19,9 +19,9 @@ static Pipeline buildDefaultPipeline(const Device& device, PipelineBuilder& pipe
 	std::string folderDir = baseDir + "\\shaders\\";
 
 	VkShaderModule defaultVertShader;
-	Shader::loadShaderModule(folderDir + "default.vert.spv", device, defaultVertShader);
+	Shader::loadShaderModule(folderDir + "circle.vert.spv", device, defaultVertShader);
 	VkShaderModule defaultFragShader;
-	Shader::loadShaderModule(folderDir + "default.frag.spv", device, defaultFragShader);
+	Shader::loadShaderModule(folderDir + "circle.frag.spv", device, defaultFragShader);
 	pipelineBuilder.setShaders(defaultVertShader, defaultFragShader);
 
 	VkPipelineLayout defaultLayout = PipelineBuilder::createPipelineLayout(device, PipelineBuilder::pipelineLayoutCreateInfo());
@@ -131,7 +131,7 @@ void Engine::render() {
 		.extent = window.extent()
 	};
 	vkCmdSetScissor(cmd.buffer(), 0, 1, &scissor);
-	vkCmdDraw(cmd.buffer(), 3, 1, 0, 0);
+	vkCmdDraw(cmd.buffer(), 0, 0, 0, 0);
 
 	vkCmdEndRendering(cmd.buffer());
 
