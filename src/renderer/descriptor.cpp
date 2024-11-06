@@ -26,6 +26,12 @@ DescriptorPool::~DescriptorPool() {
 
 DescriptorLayoutBuilder::DescriptorLayoutBuilder(const Device& device) : _device(device) {}
 
+DescriptorLayoutBuilder::~DescriptorLayoutBuilder() {
+	for (auto& [name, layout] : _descriptorLayouts) {
+		vkDestroyDescriptorSetLayout(_device.device(), layout, nullptr);
+	}
+}
+
 void DescriptorLayoutBuilder::addBinding(uint32_t binding, VkDescriptorType descriptorType, VkShaderStageFlags stageFlags) {
 	VkDescriptorSetLayoutBinding newBinding{
 		.binding = binding,
@@ -53,6 +59,11 @@ VkDescriptorSetLayout DescriptorLayoutBuilder::build() {
 		throw std::runtime_error("Failed to build descriptor set layout!");
 	}
 	return layout;
+}
+
+void DescriptorLayoutBuilder::build(const std::string& name) {
+	VkDescriptorSetLayout layout = build();
+	_descriptorLayouts[name] = layout;
 }
 
 DescriptorSets::DescriptorSets(const Device& device, uint32_t maxSets, std::span<PoolSizeRatio> poolSizeRatios) : 

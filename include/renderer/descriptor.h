@@ -29,6 +29,7 @@ private:
 class DescriptorLayoutBuilder : public NonCopyable {
 public:
 	DescriptorLayoutBuilder(const Device& device);
+	~DescriptorLayoutBuilder();
 
 	// @brief Adds a binding and descriptor type to the descriptor layout builder
 	// 
@@ -43,10 +44,18 @@ public:
 	// @brief Builds a descriptor set layout with the current bindings
 	VkDescriptorSetLayout build();
 
+	// @brief Builds a descriptor set layout and adds it to _descriptorLayouts
+	//
+	// @param name - name to map the layout with
+	void build(const std::string& name);
+
+	inline VkDescriptorSetLayout get(const std::string& name) const { return _descriptorLayouts.at(name); }
+
 private:
 	const Device& _device;
 
 	std::vector<VkDescriptorSetLayoutBinding> _bindings;
+	std::unordered_map<std::string, VkDescriptorSetLayout> _descriptorLayouts;
 };
 
 // TODO: How to store descriptor sets without creating a separate DescriptorSet class for each descriptor set?
