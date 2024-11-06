@@ -11,6 +11,8 @@ static std::vector<PoolSizeRatio> computeDescriptorSetSizes = {
 	{VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1}
 };
 
+static uint32_t NUM_PARTICLES = 1;
+
 static Pipeline buildDefaultPipeline(const Device& device, PipelineBuilder& pipelineBuilder, const Swapchain& swapchain) {
 
 	pipelineBuilder.clear();
@@ -64,6 +66,10 @@ Engine::Engine(Window& window) :
 	}
 
 	defaultPipeline = buildDefaultPipeline(device, pipelineBuilder, swapchain);
+
+	// Set up descriptor sets here
+	// Particles will be sent to the GPU using a storage buffer
+	// Camera data will be sent using a uniform buffer (or push constants... need to refresh my knowledge of them)
 
 	logger->print("Engine Initiated!");
 }
