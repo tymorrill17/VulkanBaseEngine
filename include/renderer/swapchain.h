@@ -5,7 +5,7 @@
 #include "device.h"
 #include "frame.h"
 #include "queue_family.h"
-#include "../NonCopyable.h"
+#include "NonCopyable.h"
 #include "image.h"
 
 #include <vector>

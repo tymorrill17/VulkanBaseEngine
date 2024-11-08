@@ -1,9 +1,9 @@
 #pragma once
-#include "../NonCopyable.h"
+#include "NonCopyable.h"
 #include "vulkan/vulkan.h"
 #include "vma/vk_mem_alloc.h"
 #include "device.h"
-#include "../utility/allocator.h"
+#include "utility/allocator.h"
 
 class AllocatedBuffer : public NonCopyable {
 public:

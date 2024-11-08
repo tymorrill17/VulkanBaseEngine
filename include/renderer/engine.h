@@ -1,8 +1,8 @@
 #pragma once
 #include "vulkan/vulkan.h"
-#include "../NonCopyable.h"
-#include "../utility/allocator.h"
-#include "../logger/debug_messenger.h"
+#include "NonCopyable.h"
+#include "utility/allocator.h"
+#include "logger/debug_messenger.h"
 #include "shader.h"
 #include "pipeline_builder.h"
 #include "swapchain.h"

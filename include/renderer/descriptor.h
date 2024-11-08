@@ -1,5 +1,5 @@
 #pragma once
-#include "../NonCopyable.h"
+#include "NonCopyable.h"
 #include "vulkan/vulkan.h"
 #include "device.h"
 #include <span>

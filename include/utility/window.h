@@ -1,11 +1,11 @@
 #pragma once
-#include <SDL.h>
-#include <SDL_vulkan.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_vulkan.h>
 #include <vulkan/vulkan.h>
 #include <glm/vec2.hpp>
-#include "../renderer/instance.h"
+#include "renderer/instance.h"
 #include "logger/logger.h"
-#include "../NonCopyable.h"
+#include "NonCopyable.h"
 #include <string>
 #include <vector>
 

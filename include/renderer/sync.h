@@ -1,7 +1,7 @@
 #pragma once
 #include "vulkan/vulkan.h"
 #include "device.h"
-#include "../NonCopyable.h"
+#include "NonCopyable.h"
 
 class Semaphore : public NonCopyable {
 public:

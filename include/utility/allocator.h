@@ -1,8 +1,8 @@
 #pragma once
 #include "vma/vk_mem_alloc.h"
-#include "../renderer/device.h"
-#include "../renderer/instance.h"
-#include "../NonCopyable.h"
+#include "renderer/device.h"
+#include "renderer/instance.h"
+#include "NonCopyable.h"
 
 class Allocator : NonCopyable {
 public:

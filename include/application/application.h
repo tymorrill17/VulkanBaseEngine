@@ -1,8 +1,8 @@
 #pragma once
 #include "vulkan/vulkan.h"
-#include "../NonCopyable.h"
-#include "../utility/window.h"
-#include "../renderer/engine.h"
+#include "NonCopyable.h"
+#include "utility/window.h"
+#include "renderer/engine.h"
 #include <thread>
 #include <chrono>
 

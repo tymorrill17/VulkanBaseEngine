@@ -1,9 +1,9 @@
 #pragma once
 #include "vulkan/vulkan.h"
-#include "../NonCopyable.h"
-#include "../utility/window.h"
-#include "../logger/logger.h"
-#include "../logger/debug_messenger.h"
+#include "NonCopyable.h"
+#include "utility/window.h"
+#include "logger/logger.h"
+#include "logger/debug_messenger.h"
 #include <vector>
 
 class Instance : NonCopyable {
