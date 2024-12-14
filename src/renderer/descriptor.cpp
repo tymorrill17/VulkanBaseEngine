@@ -24,15 +24,28 @@ DescriptorPool::~DescriptorPool() {
 	vkDestroyDescriptorPool(_device.device(), _descriptorPool, nullptr);
 }
 
-DescriptorLayoutBuilder::DescriptorLayoutBuilder(const Device& device) : _device(device) {}
-
-DescriptorLayoutBuilder::~DescriptorLayoutBuilder() {
-	for (auto& [name, layout] : _descriptorLayouts) {
-		vkDestroyDescriptorSetLayout(_device.device(), layout, nullptr);
-	}
+void DescriptorPool::clearDescriptorSets() {
+	vkResetDescriptorPool(_device.device(), _descriptorPool, 0);
 }
 
-void DescriptorLayoutBuilder::addBinding(uint32_t binding, VkDescriptorType descriptorType, VkShaderStageFlags stageFlags) {
+VkDescriptorSet DescriptorPool::allocateDescriptorSet(VkDescriptorSetLayout layout) {
+	VkDescriptorSetAllocateInfo allocInfo{
+		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+		.pNext = nullptr,
+		.descriptorPool = _descriptorPool,
+		.descriptorSetCount = 1,
+		.pSetLayouts = &layout
+	};
+	VkDescriptorSet set;
+	if (vkAllocateDescriptorSets(_device.device(), &allocInfo, &set) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to allocate descriptor sets!");
+	}
+	return set;
+}
+
+DescriptorLayoutBuilder::DescriptorLayoutBuilder(const Device& device) : _device(device) {}
+
+DescriptorLayoutBuilder& DescriptorLayoutBuilder::addBinding(uint32_t binding, VkDescriptorType descriptorType, VkShaderStageFlags stageFlags) {
 	VkDescriptorSetLayoutBinding newBinding{
 		.binding = binding,
 		.descriptorType = descriptorType,
@@ -40,6 +53,7 @@ void DescriptorLayoutBuilder::addBinding(uint32_t binding, VkDescriptorType desc
 		.stageFlags = stageFlags
 	};
 	_bindings.push_back(newBinding);
+	return *this;
 }
 
 void DescriptorLayoutBuilder::clear() {
@@ -61,29 +75,44 @@ VkDescriptorSetLayout DescriptorLayoutBuilder::build() {
 	return layout;
 }
 
-void DescriptorLayoutBuilder::build(const std::string& name) {
-	VkDescriptorSetLayout layout = build();
-	_descriptorLayouts[name] = layout;
-}
+DescriptorWriter::DescriptorWriter(const Device& device) : _device(device) {}
 
-DescriptorSets::DescriptorSets(const Device& device, uint32_t maxSets, std::span<PoolSizeRatio> poolSizeRatios) : 
-	_device(device), _descriptorPool(device, maxSets, poolSizeRatios) {}
+void DescriptorWriter::writeImage(uint32_t binding, AllocatedImage& image, VkSampler sampler, VkDescriptorType descriptorType) {
+	VkDescriptorImageInfo& imageInfo = _imageInfos.emplace_back( VkDescriptorImageInfo {
+		.sampler = sampler,
+		.imageView = image.imageView(),
+		.imageLayout = image.imageLayout()
+		});
 
-void DescriptorSets::clearDescriptorSets() {
-	vkResetDescriptorPool(_device.device(), _descriptorPool.pool(), 0);
-}
-
-void DescriptorSets::allocateDescriptorSet(const std::string& name, VkDescriptorSetLayout layout) {
-	VkDescriptorSetAllocateInfo allocInfo{
-		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
-		.pNext = nullptr,
-		.descriptorPool = _descriptorPool.pool(),
-		.descriptorSetCount = 1,
-		.pSetLayouts = &layout
+	VkWriteDescriptorSet write = {
+		.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+		.dstSet = VK_NULL_HANDLE,
+		.dstBinding = binding,
+		.descriptorCount = 1,
+		.descriptorType = descriptorType,
+		.pImageInfo = &imageInfo
 	};
-	VkDescriptorSet set;
-	if (vkAllocateDescriptorSets(_device.device(), &allocInfo, &set) != VK_SUCCESS) {
-		throw std::runtime_error("Failed to allocate descriptor sets!");
-	}
-	_descriptorSets[name] = set;
+
+	_writes.push_back(write);
 }
+
+void DescriptorWriter::writeBuffer(uint32_t binding, AllocatedBuffer& buffer, size_t bufferSize, size_t offset, VkDescriptorType descriptorType) {
+	VkDescriptorBufferInfo bufferInfo = _bufferInfos.emplace_back(VkDescriptorBufferInfo{
+		.buffer = buffer.buffer(),
+		.offset = offset,
+		.range = bufferSize
+		});
+
+	VkWriteDescriptorSet write = {
+		.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+		.dstSet = VK_NULL_HANDLE,
+		.dstBinding = binding,
+		.descriptorCount = 1,
+		.descriptorType = descriptorType,
+		.pBufferInfo = &bufferInfo
+	};
+
+	_writes.push_back(write);
+}
+
+

@@ -14,17 +14,17 @@ public:
 	~Device();
 
 	// @brief Get the physicial device Vulkan object
-	inline VkPhysicalDevice physicalDevice() const { return physDevice; }
+	inline VkPhysicalDevice physicalDevice() const { return _physDevice; }
 	// @brief Get the physicial device properties
-	inline VkPhysicalDeviceProperties physicalDeviceProperies() const { return physDeviceProperties; }
+	inline VkPhysicalDeviceProperties physicalDeviceProperies() const { return _physDeviceProperties; }
 	// @brief Get the logical device Vulkan object
-	inline VkDevice device() const { return logicalDevice; }
+	inline VkDevice device() const { return _logicalDevice; }
 	// @brief Get the queue family indices object
-	inline QueueFamilyIndices queueFamilyIndices() const { return indices; }
+	inline QueueFamilyIndices queueFamilyIndices() const { return _indices; }
 	// @brief Get the graphics queue Vulkan object
-	inline VkQueue graphicsQueue() const { return graphQueue; }
+	inline VkQueue graphicsQueue() const { return _graphQueue; }
 	// @brief Get the present queue Vulkan object
-	inline VkQueue presentQueue() const { return presQueue; }
+	inline VkQueue presentQueue() const { return _presQueue; }
 
 	static VkPhysicalDeviceFeatures deviceFeatures;
 	static VkPhysicalDeviceVulkan12Features features12;
@@ -32,19 +32,19 @@ public:
 
 private:
 	// @brief Representation of the physical GPU
-	VkPhysicalDevice physDevice;
+	VkPhysicalDevice _physDevice;
 	// @brief Properties of the chosen GPU
-	VkPhysicalDeviceProperties physDeviceProperties;
+	VkPhysicalDeviceProperties _physDeviceProperties;
 
 	// @brief Logical representation of the physical device that the code can interact with
-	VkDevice logicalDevice;
+	VkDevice _logicalDevice;
 
-	const Instance& instance;
-	Window& window;
+	const Instance& _instance;
+	Window& _window;
 
-	QueueFamilyIndices indices;
-	VkQueue graphQueue; // Graphics queue
-	VkQueue presQueue; // Present queue
+	QueueFamilyIndices _indices;
+	VkQueue _graphQueue; // Graphics queue
+	VkQueue _presQueue; // Present queue
 
 	// @brief Verify that the selected physical device supports the requested extensions
 	//

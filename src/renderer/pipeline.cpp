@@ -1,9 +1,9 @@
 #include "renderer/pipeline.h"
 
-Pipeline::Pipeline(const Device& device) :
-	_device(device), _pipeline(VK_NULL_HANDLE), _pipelineLayout(VK_NULL_HANDLE) {}
+Pipeline::Pipeline() :
+	_device(nullptr), _pipeline(VK_NULL_HANDLE), _pipelineLayout(VK_NULL_HANDLE) {}
 
-Pipeline::Pipeline(const Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout) : 
+Pipeline::Pipeline(const Device* device, VkPipeline pipeline, VkPipelineLayout pipelineLayout) : 
 	_device(device),
 	_pipeline(pipeline),
 	_pipelineLayout(pipelineLayout) {}
@@ -13,12 +13,14 @@ Pipeline::~Pipeline() {
 }
 
 void Pipeline::cleanup() {
+	if (!_device) return;
+
 	if (_pipelineLayout != VK_NULL_HANDLE) {
-		vkDestroyPipelineLayout(_device.device(), _pipelineLayout, nullptr);
+		vkDestroyPipelineLayout(_device->device(), _pipelineLayout, nullptr);
 		_pipelineLayout = VK_NULL_HANDLE;
 	}
 	if (_pipeline != VK_NULL_HANDLE) {
-		vkDestroyPipeline(_device.device(), _pipeline, nullptr);
+		vkDestroyPipeline(_device->device(), _pipeline, nullptr);
 		_pipeline = VK_NULL_HANDLE;
 	}
 }

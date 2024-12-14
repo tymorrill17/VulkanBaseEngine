@@ -10,24 +10,29 @@ VkPhysicalDeviceVulkan12Features Device::features12{ .sType = VK_STRUCTURE_TYPE_
 													 .descriptorIndexing = true,
 													 .bufferDeviceAddress = true };
 
-Device::Device(const Instance& instance, Window& window, const std::vector<const char*>& extensions)
-	: physDevice(VK_NULL_HANDLE), logicalDevice(VK_NULL_HANDLE), window(window), instance(instance), graphQueue(VK_NULL_HANDLE), presQueue(VK_NULL_HANDLE) {
+Device::Device(const Instance& instance, Window& window, const std::vector<const char*>& extensions) : 
+	_physDevice(VK_NULL_HANDLE),
+	_logicalDevice(VK_NULL_HANDLE),
+	_window(window),
+	_instance(instance),
+	_graphQueue(VK_NULL_HANDLE), 
+	_presQueue(VK_NULL_HANDLE) {
 
 	Logger* logger = Logger::get_logger();
 
 	// Create the surface for the passed-in window. I don't necessarily like it being here, but we are keeping window creation separate from the engine, so this has to be here for now.
-	this->window.create_surface(instance.handle());
+	this->_window.create_surface(_instance.handle());
 
 	// Select the physical device to be used for rendering
-	physDevice = selectPhysicalDevice(instance.handle(), window.surface(), extensions);
+	_physDevice = selectPhysicalDevice(_instance.handle(), _window.surface(), extensions);
 	// Queue the physical device properties
-	vkGetPhysicalDeviceProperties(physDevice, &physDeviceProperties);
-	logger->log(physDeviceProperties);
+	vkGetPhysicalDeviceProperties(_physDevice, &_physDeviceProperties);
+	logger->log(_physDeviceProperties);
 
 	// Find the queue families and assign their indices
-	indices = QueueFamily::findQueueFamilies(physDevice, window.surface());
-	logger->log(indices);
-	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
+	_indices = QueueFamily::findQueueFamilies(_physDevice, _window.surface());
+	logger->log(_indices);
+	std::set<uint32_t> uniqueQueueFamilies = { _indices.graphicsFamily.value(), _indices.presentFamily.value() };
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	// Populate queue create infos
 	float priority = 1.0f;
@@ -59,19 +64,19 @@ Device::Device(const Instance& instance, Window& window, const std::vector<const
 	.ppEnabledExtensionNames = extensions.data()
 	};
 
-	if (vkCreateDevice(physDevice, &deviceCreateInfo, nullptr, &logicalDevice) != VK_SUCCESS) {
+	if (vkCreateDevice(_physDevice, &deviceCreateInfo, nullptr, &_logicalDevice) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create logical device!");
 	}
 	logger->print("Vulkan device successfully created.");
 
 	// Get handles for the graphics and present queues
-	vkGetDeviceQueue(logicalDevice, indices.graphicsFamily.value(), 0, &graphQueue);
-	vkGetDeviceQueue(logicalDevice, indices.presentFamily.value(), 0, &presQueue);
+	vkGetDeviceQueue(_logicalDevice, _indices.graphicsFamily.value(), 0, &_graphQueue);
+	vkGetDeviceQueue(_logicalDevice, _indices.presentFamily.value(), 0, &_presQueue);
 	
 }
 
 Device::~Device() {
-	vkDestroyDevice(logicalDevice, nullptr);
+	vkDestroyDevice(_logicalDevice, nullptr);
 }
 
 bool Device::checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice, std::vector<const char*>& extensions) {

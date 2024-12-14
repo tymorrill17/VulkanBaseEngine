@@ -64,7 +64,7 @@ Pipeline PipelineBuilder::buildPipeline() {
         throw std::runtime_error("Failed to create pipeline");
     }
 
-    Pipeline newPipeline(_device, vkPipeline, pipelineLayout);
+    Pipeline newPipeline(&_device, vkPipeline, pipelineLayout);
     logger->print("Successfully Created Render Pipeline");
 
     return newPipeline;

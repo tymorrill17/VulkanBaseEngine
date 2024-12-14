@@ -5,8 +5,8 @@
 
 class Pipeline : NonCopyable {
 public:
-	Pipeline(const Device& device);
-	Pipeline(const Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout);
+	Pipeline();
+	Pipeline(const Device* device, VkPipeline pipeline, VkPipelineLayout pipelineLayout);
 	~Pipeline();
 
 	// Write move constructors for the pipeline builder to function properly
@@ -23,7 +23,7 @@ private:
 	VkPipelineLayout _pipelineLayout;
 
 	// @brief Reference to the Vulkan device used to create the pipeline
-	const Device& _device;
+	const Device* _device;
 
 	void cleanup();
 };
