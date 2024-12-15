@@ -1,5 +1,6 @@
 #pragma once
 #include "glm/glm.hpp"
+#include "NonCopyable.h"
 #include <vector>
 
 struct Particle2D {
@@ -7,7 +8,7 @@ struct Particle2D {
 	glm::vec2 velocity{ 0.0f, 0.0f };
 };
 
-class ParticleSystem2D {
+class ParticleSystem2D : public NonCopyable {
 public:
 	ParticleSystem2D(const int numParticles, const float radius, Particle2D* particles);
 

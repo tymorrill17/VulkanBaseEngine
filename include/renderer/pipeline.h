@@ -3,7 +3,7 @@
 #include "NonCopyable.h"
 #include "device.h"
 
-class Pipeline : NonCopyable {
+class Pipeline : public NonCopyable {
 public:
 	Pipeline();
 	Pipeline(const Device* device, VkPipeline pipeline, VkPipelineLayout pipelineLayout);

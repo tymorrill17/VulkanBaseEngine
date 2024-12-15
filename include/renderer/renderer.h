@@ -14,7 +14,7 @@
 class Swapchain;
 class AllocatedImage;
 
-class Renderer : NonCopyable {
+class Renderer : public NonCopyable {
 public:
 	// @brief Construct and initialize the Vulkan 
 	Renderer(Window& window);
@@ -23,7 +23,7 @@ public:
 	~Renderer() = default;
 
 	// @brief Renders each RenderSystem to the frame and presents it
-	void drawFrame();
+	void renderAll();
 
 	// @brief Handles changes that need to be made when the window is resized
 	void resizeCallback();

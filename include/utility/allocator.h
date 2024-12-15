@@ -4,7 +4,7 @@
 #include "renderer/instance.h"
 #include "NonCopyable.h"
 
-class Allocator : NonCopyable {
+class Allocator : public NonCopyable {
 public:
 	Allocator(Device& device, Instance& instance);
 	~Allocator();

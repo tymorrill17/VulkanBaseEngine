@@ -42,8 +42,8 @@ void Application::run() {
 
 		// Update/fill buffers
 
+		renderer.renderAll(); // Have the renderer render all the render systems
 
-		renderer.drawFrame(); // Run the render system
 		renderer.resizeCallback(); // Check for window resize and call the window resize callback function
 	}
 	logger->print("Shutting Down... Bye Bye!");

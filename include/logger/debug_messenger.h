@@ -2,11 +2,12 @@
 #include <vulkan/vulkan.h>
 #include "renderer/instance.h"
 #include "logger.h"
+#include "NonCopyable.h"
 #include <iostream>
 
 class Instance;
 
-class DebugMessenger {
+class DebugMessenger : public NonCopyable {
 public:
 	DebugMessenger(const Instance& instance);
 	~DebugMessenger();

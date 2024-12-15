@@ -13,15 +13,16 @@
 class ParticleRenderSystem : public RenderSystem {
 public:
 	ParticleRenderSystem(Renderer& renderer);
-	~ParticleRenderSystem();
 
 	void render();
 
 private:
 	Renderer& _renderer;
 
-	Pipeline _defaultPipeline;
+	Pipeline _pipeline;
 
 	DescriptorPool _globalDescriptorPool;
 	VkDescriptorSet _particleDescriptor;
+
+	void buildPipeline();
 };

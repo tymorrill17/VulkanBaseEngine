@@ -10,7 +10,7 @@
 #include <vector>
 
 // @brief Contains the window that will display the application
-class Window : NonCopyable {
+class Window : public NonCopyable {
 public:
 	// @brief Constructor for a window. Creates an SDL_Window object and initializes SDL
 	// 

@@ -6,7 +6,7 @@
 #include "logger/debug_messenger.h"
 #include <vector>
 
-class Instance : NonCopyable {
+class Instance : public NonCopyable {
 public:
 	Instance(const char* appName, const char* engineName, bool enableValidationLayers);
 	~Instance();

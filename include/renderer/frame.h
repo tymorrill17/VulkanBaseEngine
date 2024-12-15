@@ -7,7 +7,7 @@
 
 class Command;
 
-class Frame : NonCopyable {
+class Frame : public NonCopyable {
 public:
 	Frame(const Device& device);
 

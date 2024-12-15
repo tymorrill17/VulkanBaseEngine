@@ -8,10 +8,14 @@
 #include <string>
 #include <set>
 
-class Device : NonCopyable {
+class Device : public NonCopyable {
 public:
 	Device(const Instance& instance, Window& window, const std::vector<const char*>& extensions);
 	~Device();
+
+	static VkPhysicalDeviceFeatures deviceFeatures;
+	static VkPhysicalDeviceVulkan12Features features12;
+	static VkPhysicalDeviceVulkan13Features features13;
 
 	// @brief Get the physicial device Vulkan object
 	inline VkPhysicalDevice physicalDevice() const { return _physDevice; }
@@ -25,10 +29,6 @@ public:
 	inline VkQueue graphicsQueue() const { return _graphQueue; }
 	// @brief Get the present queue Vulkan object
 	inline VkQueue presentQueue() const { return _presQueue; }
-
-	static VkPhysicalDeviceFeatures deviceFeatures;
-	static VkPhysicalDeviceVulkan12Features features12;
-	static VkPhysicalDeviceVulkan13Features features13;
 
 private:
 	// @brief Representation of the physical GPU

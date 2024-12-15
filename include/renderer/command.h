@@ -5,7 +5,7 @@
 class Device;
 class Frame;
 
-class Command : NonCopyable {
+class Command : public NonCopyable {
 public:
 	Command(const Device& device, VkCommandPoolCreateFlags flags);
 	~Command();

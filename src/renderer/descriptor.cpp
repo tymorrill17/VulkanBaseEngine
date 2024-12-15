@@ -96,7 +96,7 @@ void DescriptorWriter::writeImage(uint32_t binding, AllocatedImage& image, VkSam
 	_writes.push_back(write);
 }
 
-void DescriptorWriter::writeBuffer(uint32_t binding, AllocatedBuffer& buffer, size_t bufferSize, size_t offset, VkDescriptorType descriptorType) {
+void DescriptorWriter::writeBuffer(uint32_t binding, Buffer& buffer, size_t bufferSize, size_t offset, VkDescriptorType descriptorType) {
 	VkDescriptorBufferInfo bufferInfo = _bufferInfos.emplace_back(VkDescriptorBufferInfo{
 		.buffer = buffer.buffer(),
 		.offset = offset,

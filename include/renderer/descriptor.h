@@ -62,7 +62,7 @@ private:
 };
 
 // DescriptorWriter is for binding and writing the data to the GPU
-class DescriptorWriter {
+class DescriptorWriter : public NonCopyable{
 public:
 	DescriptorWriter(const Device& device);
 
@@ -70,7 +70,7 @@ public:
 	void writeImage(uint32_t binding, AllocatedImage& image, VkSampler sampler, VkDescriptorType descriptorType);
 
 	// @brief adds a VkDescriptorBufferInfo to the bufferInfos queue to be written using updateSet()
-	void writeBuffer(uint32_t binding, AllocatedBuffer& buffer, size_t bufferSize, size_t offset, VkDescriptorType descriptorType);
+	void writeBuffer(uint32_t binding, Buffer& buffer, size_t bufferSize, size_t offset, VkDescriptorType descriptorType);
 
 	// @brief clears the imageInfos, bufferInfos, and writes
 	void clear();

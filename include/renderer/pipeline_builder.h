@@ -9,7 +9,7 @@
 
 class Pipeline;
 
-class PipelineBuilder : NonCopyable {
+class PipelineBuilder : public NonCopyable {
 public:
 	PipelineBuilder(const Device& device);
 	// ~PipelineBuilder(); // TODO: Implement a way to delete all pipelines created by the builder. Perhaps using shared pointers?

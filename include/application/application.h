@@ -15,7 +15,7 @@ const uint32_t APPLICATION_HEIGHT = 1080;
 class Renderer;
 
 // @brief The main program
-class Application : NonCopyable {
+class Application : public NonCopyable {
 public:
 	// @brief Constructor for a new application
 	Application();

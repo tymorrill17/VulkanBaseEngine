@@ -13,39 +13,39 @@ static std::vector<PoolSizeRatio> computeDescriptorSetSizes = {
 
 static uint32_t NUM_PARTICLES = 1;
 
-static Pipeline buildDefaultPipeline(const Device& device, PipelineBuilder& pipelineBuilder, const Swapchain& swapchain) {
+void ParticleRenderSystem::buildPipeline() {
 
-	pipelineBuilder.clear();
+	_renderer.pipelineBuilder().clear();
 
 	std::string baseDir = static_cast<std::string>(BASE_DIR);
 	std::string folderDir = baseDir + "\\shaders\\";
 
 	VkShaderModule defaultVertShader;
-	Shader::loadShaderModule(folderDir + "circle.vert.spv", device, defaultVertShader);
+	Shader::loadShaderModule(folderDir + "circle.vert.spv", _renderer.device(), defaultVertShader);
 	VkShaderModule defaultFragShader;
-	Shader::loadShaderModule(folderDir + "circle.frag.spv", device, defaultFragShader);
-	pipelineBuilder.setShaders(defaultVertShader, defaultFragShader);
+	Shader::loadShaderModule(folderDir + "circle.frag.spv", _renderer.device(), defaultFragShader);
+	_renderer.pipelineBuilder().setShaders(defaultVertShader, defaultFragShader);
 
-	VkPipelineLayout defaultLayout = PipelineBuilder::createPipelineLayout(device, PipelineBuilder::pipelineLayoutCreateInfo());
-	pipelineBuilder.setPipelineLayout(defaultLayout);
-	pipelineBuilder.setVertexInputState(PipelineBuilder::vertexInputStateCreateInfo());
+	VkPipelineLayout layout = PipelineBuilder::createPipelineLayout(_renderer.device(), PipelineBuilder::pipelineLayoutCreateInfo());
+	_renderer.pipelineBuilder().setPipelineLayout(layout);
+	_renderer.pipelineBuilder().setVertexInputState(PipelineBuilder::vertexInputStateCreateInfo());
 
-	pipelineBuilder.setInputTopology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
-	pipelineBuilder.setPolygonMode(VK_POLYGON_MODE_FILL);
-	pipelineBuilder.setCullMode(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
-	pipelineBuilder.setMultisampling();
-	pipelineBuilder.disableBlending();
-	pipelineBuilder.setDepthTest();
-	pipelineBuilder.setColorAttachmentFormat(swapchain.imageFormat());
+	_renderer.pipelineBuilder().setInputTopology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+	_renderer.pipelineBuilder().setPolygonMode(VK_POLYGON_MODE_FILL);
+	_renderer.pipelineBuilder().setCullMode(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
+	_renderer.pipelineBuilder().setMultisampling();
+	_renderer.pipelineBuilder().disableBlending();
+	_renderer.pipelineBuilder().setDepthTest();
+	_renderer.pipelineBuilder().setColorAttachmentFormat(_renderer.swapchain().imageFormat());
 
-	return pipelineBuilder.buildPipeline();
+	_pipeline = _renderer.pipelineBuilder().buildPipeline();
 }
 
 ParticleRenderSystem::ParticleRenderSystem(Renderer& renderer) :
 	_renderer(renderer), 
 	_globalDescriptorPool(_renderer.device(), 10, renderDescriptorSetSizes) {
 
-	_defaultPipeline = buildDefaultPipeline(_renderer.device(), _renderer.pipelineBuilder(), _renderer.swapchain());
+	buildPipeline();
 
 	// Set up descriptor sets here
 	
@@ -55,16 +55,12 @@ ParticleRenderSystem::ParticleRenderSystem(Renderer& renderer) :
 	_particleDescriptor = _globalDescriptorPool.allocateDescriptorSet(particleDescriptor);
 }
 
-ParticleRenderSystem::~ParticleRenderSystem() {
-
-}
-
 void ParticleRenderSystem::render() {
 	// Get the current frame's command buffer
 	Command& cmd = _renderer.getCurrentFrame().command();
 
 	// Bind pipelines and draw here
-	vkCmdBindPipeline(cmd.buffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, _defaultPipeline.pipeline()); // Bind pipeline
+	vkCmdBindPipeline(cmd.buffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline.pipeline()); // Bind pipeline
 
 	vkCmdDraw(cmd.buffer(), 0, 0, 0, 0);
 }
