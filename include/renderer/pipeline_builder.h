@@ -56,7 +56,7 @@ public:
 	static VkPipelineLayout createPipelineLayout(const Device& device, VkPipelineLayoutCreateInfo createInfo);
 
 	// @brief Create a default, blank VkPipelineLayoutCreateInfo struct
-	static VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo();
+	static VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo(const std::vector<VkDescriptorSetLayout>& setLayouts = {}, const std::vector<VkPushConstantRange>& pushConstantRanges = {});
 	// @brief Create a default, blank VkPipelineVertexInputStateCreateInfo struct (probably won't need this when I implement buffer device address functionality)
 	static VkPipelineVertexInputStateCreateInfo vertexInputStateCreateInfo();
 

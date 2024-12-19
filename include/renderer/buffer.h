@@ -8,7 +8,7 @@
 
 class Buffer : public NonCopyable {
 public:
-	Buffer(Device& device, Allocator& allocator, size_t instanceSize,
+	Buffer(const Device& device, const Allocator& allocator, size_t instanceSize,
 		uint32_t instanceCount, VkBufferUsageFlags usageFlags,
 		VmaMemoryUsage memoryUsage, size_t minOffsetAlignment = 1);
 	~Buffer();
@@ -39,8 +39,8 @@ public:
 	inline size_t alignmentSize() const { return _alignmentSize; }
 
 private:
-	Device& _device;
-	Allocator& _allocator;
+	const Device& _device;
+	const Allocator& _allocator;
 
 	VkBuffer _buffer; // Vulkan buffer object
 	VmaAllocation _allocation; // vma allocation object

@@ -67,10 +67,10 @@ public:
 	DescriptorWriter(const Device& device);
 
 	// @brief adds a VkDescriptorImageInfo to the imageInfos queue to be written using updateSet()
-	void writeImage(uint32_t binding, AllocatedImage& image, VkSampler sampler, VkDescriptorType descriptorType);
+	DescriptorWriter& writeImage(uint32_t binding, AllocatedImage& image, VkSampler sampler, VkDescriptorType descriptorType);
 
 	// @brief adds a VkDescriptorBufferInfo to the bufferInfos queue to be written using updateSet()
-	void writeBuffer(uint32_t binding, Buffer& buffer, size_t bufferSize, size_t offset, VkDescriptorType descriptorType);
+	DescriptorWriter& writeBuffer(uint32_t binding, Buffer& buffer, VkDescriptorType descriptorType, size_t bufferSize = VK_WHOLE_SIZE, size_t offset = 0);
 
 	// @brief clears the imageInfos, bufferInfos, and writes
 	void clear();

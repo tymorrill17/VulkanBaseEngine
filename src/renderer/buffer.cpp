@@ -1,6 +1,6 @@
 #include "renderer/buffer.h"
 
-Buffer::Buffer(Device& device, Allocator& allocator, size_t instanceSize,
+Buffer::Buffer(const Device& device, const Allocator& allocator, size_t instanceSize,
 	uint32_t instanceCount, VkBufferUsageFlags usageFlags,
 	VmaMemoryUsage memoryUsage, size_t minOffsetAlignment) :
 	_device(device),

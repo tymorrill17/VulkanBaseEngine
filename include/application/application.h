@@ -3,6 +3,8 @@
 #include "NonCopyable.h"
 #include "utility/window.h"
 #include "renderer/renderer.h"
+#include "renderer/descriptor.h"
+#include "renderer/buffer.h"
 #include "physics/particle_system.h"
 #include "systems/particle_render_system.h"
 #include "systems/render_system.h"

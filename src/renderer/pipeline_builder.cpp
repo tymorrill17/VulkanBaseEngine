@@ -164,15 +164,15 @@ VkPipelineLayout PipelineBuilder::createPipelineLayout(const Device& device, VkP
     return pipelineLayout;
 }
 
-VkPipelineLayoutCreateInfo PipelineBuilder::pipelineLayoutCreateInfo() {
+VkPipelineLayoutCreateInfo PipelineBuilder::pipelineLayoutCreateInfo(const std::vector<VkDescriptorSetLayout>& setLayouts, const std::vector<VkPushConstantRange>& pushConstantRanges) {
     VkPipelineLayoutCreateInfo createInfo{
         .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
         .pNext = nullptr,
         .flags = 0,
-        .setLayoutCount = 0,
-        .pSetLayouts = nullptr,
-        .pushConstantRangeCount = 0,
-        .pPushConstantRanges = nullptr
+        .setLayoutCount = static_cast<uint32_t>(setLayouts.size()),
+        .pSetLayouts = setLayouts.data(),
+        .pushConstantRangeCount = static_cast<uint32_t>(pushConstantRanges.size()),
+        .pPushConstantRanges = pushConstantRanges.data()
     };
     return createInfo;
 }

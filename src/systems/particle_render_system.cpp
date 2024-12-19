@@ -1,18 +1,5 @@
 #include "systems/particle_render_system.h"
 
-static std::vector<PoolSizeRatio> renderDescriptorSetSizes = {
-	//{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 10},
-	//{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 10},
-	{VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 10},
-	//{VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 10}
-};
-
-static std::vector<PoolSizeRatio> computeDescriptorSetSizes = {
-	{VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1}
-};
-
-static uint32_t NUM_PARTICLES = 1;
-
 void ParticleRenderSystem::buildPipeline() {
 
 	_renderer.pipelineBuilder().clear();
@@ -26,7 +13,7 @@ void ParticleRenderSystem::buildPipeline() {
 	Shader::loadShaderModule(folderDir + "circle.frag.spv", _renderer.device(), defaultFragShader);
 	_renderer.pipelineBuilder().setShaders(defaultVertShader, defaultFragShader);
 
-	VkPipelineLayout layout = PipelineBuilder::createPipelineLayout(_renderer.device(), PipelineBuilder::pipelineLayoutCreateInfo());
+	VkPipelineLayout layout = PipelineBuilder::createPipelineLayout(_renderer.device(), PipelineBuilder::pipelineLayoutCreateInfo(_particleDescriptors));
 	_renderer.pipelineBuilder().setPipelineLayout(layout);
 	_renderer.pipelineBuilder().setVertexInputState(PipelineBuilder::vertexInputStateCreateInfo());
 
@@ -41,18 +28,13 @@ void ParticleRenderSystem::buildPipeline() {
 	_pipeline = _renderer.pipelineBuilder().buildPipeline();
 }
 
-ParticleRenderSystem::ParticleRenderSystem(Renderer& renderer) :
+ParticleRenderSystem::ParticleRenderSystem(Renderer& renderer, std::vector<VkDescriptorSetLayout> particleDescriptorLayout, std::vector<VkDescriptorSet> particleDescriptorSets, int numParticles) :
 	_renderer(renderer), 
-	_globalDescriptorPool(_renderer.device(), 10, renderDescriptorSetSizes) {
+	_particleDescriptors(particleDescriptorLayout),
+	_particleSet(particleDescriptorSets),
+	_numParticles(numParticles) {
 
 	buildPipeline();
-
-	// Set up descriptor sets here
-	
-	VkDescriptorSetLayout particleDescriptor = _renderer.descriptorLayoutBuilder()
-		.addBinding(0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
-		.build();
-	_particleDescriptor = _globalDescriptorPool.allocateDescriptorSet(particleDescriptor);
 }
 
 void ParticleRenderSystem::render() {
@@ -62,5 +44,7 @@ void ParticleRenderSystem::render() {
 	// Bind pipelines and draw here
 	vkCmdBindPipeline(cmd.buffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline.pipeline()); // Bind pipeline
 
-	vkCmdDraw(cmd.buffer(), 0, 0, 0, 0);
+	vkCmdBindDescriptorSets(cmd.buffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline.pipelineLayout(), 0, _particleSet.size(), _particleSet.data(), 0, nullptr);
+
+	vkCmdDraw(cmd.buffer(), 6 * _numParticles, 0, 0, 0);
 }

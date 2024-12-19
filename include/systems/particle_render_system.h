@@ -4,7 +4,6 @@
 #include "render_system.h"
 #include "renderer/renderer.h"
 #include "renderer/device.h"
-#include "renderer/descriptor.h"
 #include "renderer/pipeline_builder.h"
 #include "renderer/command.h"
 
@@ -12,17 +11,22 @@
 
 class ParticleRenderSystem : public RenderSystem {
 public:
-	ParticleRenderSystem(Renderer& renderer);
+	ParticleRenderSystem(Renderer& renderer, std::vector<VkDescriptorSetLayout> particleDescriptorLayout, std::vector<VkDescriptorSet> particleDescriptorSets, int numParticles);
 
 	void render();
+
+	void bindDescriptor(VkDescriptorSet set);
 
 private:
 	Renderer& _renderer;
 
 	Pipeline _pipeline;
 
-	DescriptorPool _globalDescriptorPool;
-	VkDescriptorSet _particleDescriptor;
+	std::vector<VkDescriptorSetLayout> _particleDescriptors;
+	std::vector<VkDescriptorSet> _particleSet;
+
+
+	const int _numParticles;
 
 	void buildPipeline();
 };
